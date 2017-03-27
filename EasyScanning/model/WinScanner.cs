@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -43,18 +42,18 @@ namespace EasyScanning
         /// Use scanner to scan an image (with user selecting the scanner from a dialog).
         /// </summary>
         /// <returns>Scanned images.</returns>
-        public static void Scan(string tipo, string nome)
+        public static void Scan(string tipo, string nome, String folder)
         {
             WIA.ICommonDialog dialog = new WIA.CommonDialog();
             WIA.Device device = dialog.ShowSelectDevice(WIA.WiaDeviceType.UnspecifiedDeviceType, true, false);
-                
+
             if (device != null)
             {
-                Scan(device.DeviceID, tipo, nome);
+                Scan(device.DeviceID, tipo, nome, folder);
             }
             else
             {
-                throw new Exception("You must select a device for scanning.");
+                throw new Exception("Você deve selecionar uma impressora para poder escanear!");
             }
         }
 
@@ -63,7 +62,7 @@ namespace EasyScanning
         /// </summary>
         /// <param name="scannerName"></param>
         /// <returns>Scanned images.</returns>
-        public static void Scan(string scannerId, string tipo, string nome)
+        public static void Scan(string scannerId, string tipo, string nome, String folder)
         {
 
 
@@ -104,22 +103,19 @@ namespace EasyScanning
                     // scan image
                     WIA.ICommonDialog wiaCommonDialog = new WIA.CommonDialog();
                     WIA.ImageFile image = (WIA.ImageFile)wiaCommonDialog.ShowTransfer(item, wiaFormatJPEG, false);
-                    //Eletrodoméstico
-                    //Eletroeletrônico
-                    //Movel 
                     string finalPath = "";
                     switch (tipo)
                     {
                         case "Eletrodoméstico":
-                            finalPath = @"C:\Users\Pichau\Documents\Digitalizações\Eletrodoméstico";
+                            finalPath = folder + @"\Eletrodoméstico";
                             break;
 
                         case "Eletrônico":
-                            finalPath = @"C:\Users\Pichau\Documents\Digitalizações\Eletrônico";
+                            finalPath = folder + @"\Eletrônico";
                             break;
 
                         case "Itens variados":
-                            finalPath = @"C:\Users\Pichau\Documents\Digitalizações\Itens variados";
+                            finalPath = folder + @"\Itens variados";
                             break;
 
 
@@ -152,7 +148,7 @@ namespace EasyScanning
             }
             else if (dialogResult == DialogResult.No)
             {
-                Process.Start(@"C:\Users\Pichau\Documents\Digitalizações");
+                Process.Start(folder);
                 Application.Exit();
             }
 
